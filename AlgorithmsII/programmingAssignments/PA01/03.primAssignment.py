@@ -77,11 +77,14 @@ def primMST(edgeList):
     
 edgeList = getEdgeData()
 spanningTreeEdges = primMST(edgeList)
-result = 0
-for edge in spanningTreeEdges :
-    result += edge[2]
 
-#result = sum([SpanningEdge[2] for SpanningEdge in spanningTreeEdges])
+# Keep code simplicity.
+results = sum([SpanningEdge[2] for SpanningEdge in spanningTreeEdges])
+print results
 
-print result
-#V = primMST(edgeList)  
+
+# result = 0
+# for edge in spanningTreeEdges :
+#     result += edge[2]
+
+
