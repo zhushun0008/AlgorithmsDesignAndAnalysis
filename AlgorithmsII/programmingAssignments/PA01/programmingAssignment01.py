@@ -43,34 +43,7 @@ def computeTotalCost(scheduledJobList):
     return sumCost    
     
     
-def getEdgeData():
-    data =  open("F:\SkyDrive\Studying\coursera\Algorithms_designAndAnalysis\AlgorithmsDesignAndAnalysis\AlgorithmsII\programmingAssignments\PA01\edges.txt").readlines()
-    edgeList = [ tuple(map(int, r.split())) for r in data[1:] ]
-    return edgeList   
-    
- 
-    
-def primMST(edgeList):
-    V1 = []
-    V2 = []
-    totalCost = 0
-    for edge in edgeList :
-        V1.append(edge[0])
-        V2.append(edge[1])
-    V = set().union(set(V1),set(V2))  
-    
-    increasedEdgeListByWeights = sorted(edgeList,key=lambda x:[2])
-    X = V[0]
-    while set(X) != V :
-        cheapestEdge = findCheapestEdge(X,V-X,increasedEdgeListByWeights)
-        X = set().union(X,cheapestEdge[1])
-        totalCost += cheapestEdge[2]
-        increasedEdgeListByWeights.remove(cheapestEdge)
 
-    return totalCost       
- 
-def findCheapestEdge(X,VminusX,edgeList) :
-    return edgeList[1]
     
           
 jobList = getJobData()   
@@ -81,5 +54,3 @@ scheduledJobList2 = scheduleJobsWithDecreaingRatio(jobList)
 totalcost2 = computeTotalCost(scheduledJobList2)
 
 
-edgeList = getEdgeData()
-V = primMST(edgeList)
