@@ -5,12 +5,25 @@ def getEdgeData():
     return edgeList   
     
  
-def getGraphAugmentedAdjList(edgeList) :  
+def getGraphAugmentedAdjList(edgeList) :
+    """
+    
+    
+    outputs:
+        1. Vertices - all vertices in the graph
+        2. adjacencyList - [[vertex1 key keyToEdgeIndex],[(edge1Info),(adge2Info)...,(adgenInfo)],
+                            [vertex2 key keyToEdgeIndex],[(edge1Info),(adge2Info)...,[adgenInfo],
+                                    ......
+                                    
+                            ]
+          
+    
+    """
     ## Get all vertices from all edges  
     V1 = []
     V2 = []
     adjacencyList = []
-    keyValue = 10000000
+    keyValue = 10000000000
     keyToEdgeIndex = None
     for edge in edgeList :
         V1.append(edge[0])
@@ -22,7 +35,9 @@ def getGraphAugmentedAdjList(edgeList) :
         #print vertex
     for edge in edgeList :
         adjacencyList[edge[0]-1][1].append(edge)
-        
+        switchedEdge = (edge[1],edge[0],edge[2])
+        adjacencyList[edge[1]-1][1].append(switchedEdge)
+
     return Vertices,adjacencyList         
       
         
@@ -30,34 +45,43 @@ def primMST(edgeList):
     print "00000"
     V,adjacencyList = getGraphAugmentedAdjList(edgeList)
     
-    rootVertex = V[0]
+    rootVertex = V[20]
     exploredVertice = [rootVertex]
     print "11111111111111"
     priorityQueue = sorted(adjacencyList[rootVertex-1][1],key=lambda x:x[2])
+    #print priorityQueue
     adjacencyList[rootVertex-1][0][1] = priorityQueue[0][2]
     unexploredVertice = list(set(V) - set([rootVertex]))
     spanningTreeEdges = []
     #return adjacencyList,priorityQueue
-    i = 1
-    while len(unexploredVertice) != 0 :
-        if priorityQueue : 
-            candidateEdge = priorityQueue[0]
-            candidateVertex = candidateEdge[1]
-    
-            priorityQueue.remove(priorityQueue[0])
-    
-            if candidateVertex in unexploredVertice and adjacencyList[candidateVertex-1][0][1] < candidateEdge[2] :
-                exploredVertice = list(set.union(set(exploredVertice),set(candidateVertex)))
-                unexploredVertice = list(set(unexploredVertice) - set(candidateVertex))
-                spanningTreeEdges.append(candidateEdge)
-                
-                adjacencyList[candidateVertex-1][0][1] = candidateEdge[2]
-                priorityQueue = sorted(priorityQueue + adjacencyList[candidateVertex - 1][1],key = lambda x:x[2])
+    while len(unexploredVertice) and len(priorityQueue):
+        candidateEdge = priorityQueue[0]
+        candidateVertex = candidateEdge[1]
+
+        priorityQueue.remove(priorityQueue[0])
+
+        if candidateVertex in unexploredVertice and adjacencyList[candidateVertex-1][0][1] > candidateEdge[2] :
+            exploredVertice = list(set.union(set(exploredVertice),set([candidateVertex])))
+            unexploredVertice = list(set(unexploredVertice) - set([candidateVertex]))
+            spanningTreeEdges.append(candidateEdge)
+
+            adjacencyList[candidateVertex-1][0][1] = candidateEdge[2]
+            priorityQueue = priorityQueue+adjacencyList[candidateVertex - 1][1]
+            #print(priorityQueue)
+            priorityQueue = sorted(priorityQueue,key = lambda x:x[2])
+            #print(priorityQueue)
             
     return spanningTreeEdges       
  
 
     
 edgeList = getEdgeData()
-aaa,bbb = primMST(edgeList) 
+spanningTreeEdges = primMST(edgeList)
+result = 0
+for edge in spanningTreeEdges :
+    result += edge[2]
+
+#result = sum([SpanningEdge[2] for SpanningEdge in spanningTreeEdges])
+
+print result
 #V = primMST(edgeList)  
