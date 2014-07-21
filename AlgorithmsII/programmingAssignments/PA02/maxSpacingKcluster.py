@@ -3,8 +3,8 @@ __author__ = 'zhushun0008'
 MAX_NUM_VERTICE = 500
 
 
-def getClusterData():
-    data = open("clustering1.txt").readlines()
+def getClusterData(fileName):
+    data = open(fileName).readlines()
     edgeInfoList = [tuple(map(int, r.split())) for r in data[1:]]
 
     return edgeInfoList
@@ -104,7 +104,10 @@ def getMaxDistance(clusters, remainEdges):
     return distanceDict
 
 
-edgeInfoList = getClusterData()
+# edgeInfoList = getClusterData("clustering1.txt")
+edgeInfoList = getClusterData("clustering1.txt")
 clusters, remainEdges = maxSpacingCluster(edgeInfoList, 4)
 
-print getMaxDistance(clusters, remainEdges)
+print getMaxDistance(clusters, edgeInfoList)
+
+p
