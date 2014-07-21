@@ -109,5 +109,3 @@ edgeInfoList = getClusterData("clustering1.txt")
 clusters, remainEdges = maxSpacingCluster(edgeInfoList, 4)
 
 print getMaxDistance(clusters, edgeInfoList)
-
-p

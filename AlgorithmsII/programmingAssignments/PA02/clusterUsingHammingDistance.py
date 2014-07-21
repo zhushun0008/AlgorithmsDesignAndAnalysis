@@ -1,4 +1,28 @@
 __author__ = 'zhushun0008'
+import sys
+sys.setrecursionlimit(10000)
+
+
+def unionFind(clusters, vertex):
+    def find(vertex):
+        if clusters[vertex] < 0:
+            return vertex
+        else:
+            clusters[vertex] = find(clusters[vertex])
+            return clusters[vertex]
+
+    return find(vertex)
+
+
+def TreeBasedUnion(clusters, clusterOne, clusterTwo):
+    if clusters[clusterOne] < clusters[clusterTwo]:
+        clusters[clusterTwo] += clusters[clusterOne]
+        clusters[clusterOne] = clusterTwo
+    else:
+        clusters[clusterOne] += clusters[clusterTwo]
+        clusters[clusterTwo] = clusterOne
+
+    return clusters
 
 
 def getClusterData(fileName):
@@ -24,11 +48,11 @@ def getVertexListWithHS(vertex, lenCoding):
             oneBitFlip = vertex + (1 << i)
 
         adjList.append(oneBitFlip)
-        for j in range(1, 1 << i):
+        for j in range(i):
             if oneBitFlip & (1 << j):
                 twoBitFlip = oneBitFlip - (1 << j)
             else:
-                twoBitFlip = oneBitFlip - (1 << j)
+                twoBitFlip = oneBitFlip + (1 << j)
             adjList.append(twoBitFlip)
 
     return adjList
@@ -51,22 +75,35 @@ def makeAdjList(vertexList):
 
 
 def getLeastNumClusters(vertexList, adjDict):
+    def DFS_Visit(vertex, adjDict, visitedMark, clusters, numCluster):
+        visitedMark[vertex] = True
+        for adjVertex in adjDict[vertex]:
+            if clusters.has_key(adjVertex):
+               # print adjVertex
+                #print clusters.has_key(adjVertex)
+                if visitedMark[adjVertex] == False:
+                    clusterOne = unionFind(clusters, vertex)
+                    clusterTwo = unionFind(clusters, adjVertex)
+                    if clusterOne != clusterTwo:
+                        clusters = TreeBasedUnion(clusters, clusterOne, clusterTwo)
+                        numCluster -= 1
+                        DFS_Visit(adjVertex, adjDict, visitedMark, clusters, numCluster)
+        return visitedMark, clusters, numCluster
+
+    clusters = {}
     visitedMark = {}
     for vertex in vertexList:
-        visitedMark[vertex] = 0
+        clusters[vertex] = -1
+        visitedMark[vertex] = False
 
-    def DFS_Visit(vertex, adjDict):
-        for adjVex in adjDict[vertex]:
-            if visitedMark[adjVex] == 0:
-                visitedMark[adjVex] = 1
-                DFS_Visit(adjVex, adjDict)
-
+    numCluster = len(clusters)
+    for vertex in vertexList:
+        if visitedMark[vertex] == False:
+           visitedMark, clusters, numCluster = DFS_Visit(vertex, adjDict, visitedMark, clusters, numCluster)
     numCluster = 0
-    for vertex in visitedMark.keys():
-        if visitedMark[vertex] == 0:
+    for e in clusters:
+        if clusters[e] < 0:
             numCluster += 1
-            DFS_Visit(vertex, adjDict)
-
     return numCluster
 
 
