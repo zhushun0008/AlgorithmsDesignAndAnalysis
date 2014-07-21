@@ -78,14 +78,14 @@ def getMaxDistance(clusters, remainEdges):
         i += 1
 
     distanceDict = {}
-    i = 0
-    while i < len(leaders):
-        j = 1
-        while j < len(leaders) - 1:
+    print len(leaders)
+    for i in range(0, len(leaders) - 1):
+        for j in range(i + 1, len(leaders)):
             if leaders[i] < leaders[j]:
                 distanceDict[(leaders[i], leaders[j])] = None
             else:
                 distanceDict[(leaders[j], leaders[i])] = None
+
 
         for edge in remainEdges:
             clusterOne = unionFind(clusters, edge[0])
