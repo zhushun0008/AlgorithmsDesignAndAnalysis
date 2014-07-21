@@ -86,19 +86,20 @@ def getMaxDistance(clusters, remainEdges):
             else:
                 distanceDict[(leaders[j], leaders[i])] = None
 
+    print distanceDict
 
-        for edge in remainEdges:
-            clusterOne = unionFind(clusters, edge[0])
-            clusterTwo = unionFind(clusters, edge[1])
-            if clusterOne != clusterTwo:
-                if clusterOne < clusterTwo:
-                    if None == distanceDict[(clusterOne, clusterTwo)] or edge[2] < \
-                            distanceDict[(clusterOne, clusterTwo)]:
-                        distanceDict[(clusterOne, clusterTwo)] = edge[2]
-                else:
-                    if None == distanceDict[(clusterTwo, clusterOne)] or edge[2] < \
-                            distanceDict[(clusterTwo, clusterOne)]:
-                        distanceDict[(clusterTwo, clusterOne)] = edge[2]
+    for edge in remainEdges:
+        clusterOne = unionFind(clusters, edge[0])
+        clusterTwo = unionFind(clusters, edge[1])
+        if clusterOne != clusterTwo:
+            if clusterOne < clusterTwo:
+                if None == distanceDict[(clusterOne, clusterTwo)] or edge[2] < \
+                        distanceDict[(clusterOne, clusterTwo)]:
+                    distanceDict[(clusterOne, clusterTwo)] = edge[2]
+            else:
+                if None == distanceDict[(clusterTwo, clusterOne)] or edge[2] < \
+                        distanceDict[(clusterTwo, clusterOne)]:
+                    distanceDict[(clusterTwo, clusterOne)] = edge[2]
 
     return distanceDict
 
